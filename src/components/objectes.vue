@@ -9,17 +9,15 @@
   <script>
   export default {
     props: {
-      icon: String, // La ruta de la icona de l'objecte
-      name: String, // El nom de l'objecte
-      quantity: Number // La quantitat de l'objecte
+      icon: String, 
+      name: String, 
+      quantity: Number 
     }
   };
   </script>
   
   <style scoped>
-  /* Afegiu els estils necessaris per al component aquí */
   .object {
-    /* Estils per a la disposició i aparença de l'objecte */
   }
   </style>
   

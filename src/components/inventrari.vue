@@ -10,11 +10,11 @@
   <script>
   export default {
     props: {
-      items: Array // La llista d'objectes disponibles amb les seves quantitats
+      items: Array 
     },
     methods: {
       buyItem(item) {
-        // Comunica a la botiga que es vol comprar un objecte
+     
         this.$emit('buy', item);
       }
     }
