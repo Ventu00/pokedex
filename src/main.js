@@ -1,11 +1,15 @@
-import Vue from 'vue';
-import App from './App.vue';
-import PokedexComponent from './components/PokedexComponent.vue'; 
+import { createApp } from 'vue';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-Vue.config.productionTip = false;
+import PokedexComponent from './components/PokedexComponent.vue';
 
-Vue.component('PokedexComponent', PokedexComponent); 
+createApp(PokedexComponent).mount('#PokedexComponent');
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app');
+import favoritos from './components/favoritos-pokemons.vue';
+
+createApp(favoritos).mount('#favoritos');
+
+
+import List from './components/List-pokemon.vue';
+
+createApp(List).mount('#List');

@@ -1,119 +1,106 @@
 <template>
-  <div class="pokedex">
-    <div class="filters">
-      <label>
-        <input type="checkbox" v-model="showFavorites">
-        Mostrar preferits
-      </label>
+  <div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+      <div class="container">
+        <a class="navbar-brand" href="#">Pokédex</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click="toggleView('favorites')">Favorites</a> <!-- Enlace a la página de favoritos -->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Fin Navbar -->
 
-      <button @click="toggleShowTeam">Mostrar equip</button>
-
-      <select v-model="selectedType">
-        <option value="">Tots els tipus</option>
-        <option v-for="type in types" :value="type" :key="type">{{ type }}</option>
-      </select>
-
-      <!-- Filtrar per rang de números -->
-      <input type="range" min="1" max="151" v-model="selectedRange">
-      <span>{{ selectedRange }}</span>
-    </div>
-
-    <div class="pokemon-list">
-      <div v-for="(pokemon, index) in filteredPokemon" :key="index" class="pokemon-card">
-        <img :src="pokemon.image" :alt="pokemon.name">
-        <p>{{ pokemon.name }}</p>
-        <p v-for="type in pokemon.types" :key="type">{{ type }}</p>
-        <button @click="toggleFavorite(pokemon)">Favorit</button>
-        <button @click="toggleTeam(pokemon)">Equip</button>
+    <div v-if="currentView === 'list'">
+      <h1 class="text-danger mt-4">Pokémon List</h1>
+      <div class="container">
+        <div class="row">
+          <div v-for="pokemon in pokemonList" :key="pokemon.id" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">#{{ pokemon.id }} - {{ pokemon.name }}</h5>
+                <img :src="pokemon.imageUrl" :alt="pokemon.name" class="card-img-top">
+                <p class="card-text">
+                  <b>Types:</b>
+                  <!-- Utiliza la clase de Bootstrap 'text-dark' -->
+                  <span v-for="(type, index) in pokemon.types" :key="index" class="badge badge-primary text-dark">{{ type }}</span>
+                </p>
+                <button @click="addToFavorites(pokemon)" class="btn btn-outline-secondary">Add to Favorites</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <favoritos-pokemons v-else-if="currentView === 'favorites'" :favorites="favorites"></favoritos-pokemons>
   </div>
 </template>
 
 <script>
+import FavoritosPokemons from './favoritos-pokemons.vue';
+
 export default {
+  components: {
+    FavoritosPokemons
+  },
   data() {
     return {
-      favorites: new Set(), 
-      team: new Set(), 
-      showTeam: false, 
-      showFavorites: false, 
-      selectedType: '', 
-      selectedRange: 1,
-      pokemonsList: [
-      { id: 1, name: 'Bulbasaur', types: ['Grass', 'Poison'], image: 'bulbasaur.png' },
-      { id: 2, name: 'Charmander', types: ['Fire'], image: 'charmander.png' },
-      { id: 3, name: 'Squirtle', types: ['Water'], image: 'squirtle.png' },
-    ]
+      pokemonList: [],
+      favorites: [], // Nueva propiedad para almacenar los favoritos
+      currentView: 'list' // Estado actual del componente
     };
   },
-  computed: {
-    types() {
-      return [...new Set(this.pokemonsList.flatMap(pokemon => pokemon.types))];
-    },
-    filteredPokemon() {
-      let filtered = this.pokemonsList;
-
-      if (this.showFavorites) {
-        filtered = filtered.filter(pokemon => this.favorites.has(pokemon.id));
-      }
-
-      if (this.showTeam) {
-        filtered = filtered.filter(pokemon => this.team.has(pokemon.id));
-      }
-
-      if (this.selectedType) {
-        filtered = filtered.filter(pokemon => pokemon.types.includes(this.selectedType));
-      }
-
-      filtered = filtered.filter(pokemon => pokemon.id <= this.selectedRange);
-
-      return filtered;
-    }
-  },
   methods: {
-    toggleFavorite(pokemon) {
-      if (this.favorites.has(pokemon.id)) {
-        this.favorites.delete(pokemon.id);
-      } else {
-        this.favorites.add(pokemon.id);
-      }
+    addToFavorites(pokemon) {
+      // Agregar el Pokémon a la lista de favoritos
+      this.favorites.push(pokemon);
     },
-    toggleTeam(pokemon) {
-      if (this.team.has(pokemon.id)) {
-        this.team.delete(pokemon.id);
-      } else {
-        if (this.team.size < 6) {
-          this.team.add(pokemon.id);
-        } else {
-          alert("Ja tens 6 Pokémon a l'equip!");
-        }
-      }
-    },
-    toggleShowTeam() {
-      this.showTeam = !this.showTeam;
+    toggleView(view) {
+      this.currentView = view;
     }
   },
   mounted() {
+  fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+    .then(response => response.json())
+    .then(data => {
+      console.log("Data received from PokeAPI:", data); // Verifica que los datos se estén recibiendo correctamente
+      const promises = data.results.map(pokemon => {
+        return fetch(pokemon.url)
+          .then(response => response.json())
+          .then(pokeData => {
+            console.log("Pokemon data received:", pokeData); // Verifica que los datos de cada Pokémon se estén recibiendo correctamente
+            return {
+              id: pokeData.id,
+              name: pokeData.name,
+              types: pokeData.types.map(type => type.type.name),
+              imageUrl: pokeData.sprites.front_default
+            };
+          });
+      });
+      return Promise.all(promises);
+    })
+    .then(pokemonList => {
+      console.log("Pokemon list:", pokemonList); // Verifica que la lista de Pokémon esté completa y correctamente estructurada
+      this.pokemonList = pokemonList;
+    })
+    .catch(err => console.log("Error fetching data from PokeAPI: " + err.message));
+}
 
-  }
 };
 </script>
 
 <style scoped>
-.pokedex {
-  /* Estils per al contenidor principal de la Pokédex */
-}
-
-.filters {
-  /* Estils per a la secció de filtres */
-}
-
-.pokemon-list {
-  /* Estils per a la llista de Pokémon */
-}
-
-.pokemon-card {
-  /* Estils per a la targeta de cada Pokémon */
-}
+/* Estilos existentes */
 </style>
