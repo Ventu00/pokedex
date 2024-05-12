@@ -1,0 +1,36 @@
+<template>
+  <div>
+    <h1>Favorite Pokémon</h1>
+    <div class="container">
+      <div class="row">
+        <div v-for="pokemon in favorites" :key="pokemon.id" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">#{{ pokemon.id }} - {{ pokemon.name }}</h5>
+              <img :src="pokemon.imageUrl" :alt="pokemon.name" class="card-img-top">
+              <p class="card-text">
+                <b>Types:</b>
+                <span v-for="(type, index) in pokemon.types" :key="index" class="badge badge-primary text-dark">{{ type }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    favorites: {
+      type: Array,
+      default: () => []
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* Estilos existentes */
+</style>

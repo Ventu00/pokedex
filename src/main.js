@@ -5,11 +5,19 @@ import PokedexComponent from './components/PokedexComponent.vue';
 
 createApp(PokedexComponent).mount('#PokedexComponent');
 
-import favoritos from './components/favoritos-pokemons.vue';
+import favoritos from './components/favoritosPokemons.vue';
 
 createApp(favoritos).mount('#favoritos');
 
 
-import List from './components/List-pokemon.vue';
+import ListPokemon from './components/ListPokemon.vue';
 
-createApp(List).mount('#List');
+createApp(ListPokemon).mount('#ListPokemon');
+
+import EquipPokemon from './components/equipPokemon.vue';
+
+createApp(EquipPokemon).mount('#EquipPokemon');
+
+import SliderContainer from './components/sliderContainer.vue';
+
+createApp(SliderContainer).mount('#SliderContainer');
