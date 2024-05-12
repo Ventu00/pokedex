@@ -21,3 +21,13 @@ createApp(EquipPokemon).mount('#EquipPokemon');
 import SliderContainer from './components/sliderContainer.vue';
 
 createApp(SliderContainer).mount('#SliderContainer');
+
+
+
+import InventrariPokemon from './components/inventrariPokemon.vue';
+
+createApp(InventrariPokemon).mount('#InventrariPokemon');
+
+import BotigaPokemon from './components/botigaPokemon.vue';
+
+createApp(BotigaPokemon).mount('#BotigaPokemon');

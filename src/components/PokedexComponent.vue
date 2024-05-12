@@ -20,6 +20,12 @@
             <li class="nav-item">
               <a href="#" class="nav-link" @click="toggleView('equip')">Equip</a>
             </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click="toggleView('inventari')">Inventari</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click="toggleView('botiga')">Botiga</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -31,12 +37,16 @@
       :pokemonList="pokemonList" 
       :favorites="favorites" 
       :team="team" 
-      @add-to-favorites="addToFavorites" 
+      :inventory="inventory"
+            @add-to-favorites="addToFavorites" 
       @add-to-team="addToTeam"
       @remove-from-team="removeFromTeam"
     ></ListPokemon>
     <FavoritosPokemons v-else-if="currentView === 'favorites'" :favorites="favorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
     <EquipPokemon v-else-if="currentView === 'equip'" :equip="team" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></EquipPokemon>
+    <InventrariPokemon v-else-if="currentView === 'inventory'" :inventory="inventory"></InventrariPokemon>
+    <BotigaPokemon v-else-if="currentView === 'botiga'" :inventory="inventory" @buyItem="addItemToInventory"></BotigaPokemon>
+
   </div>
 </template>
 
@@ -44,19 +54,25 @@
 import ListPokemon from './ListPokemon.vue';
 import FavoritosPokemons from './favoritosPokemons.vue';
 import EquipPokemon from './equipPokemon.vue';
+import InventrariPokemon from './inventrariPokemon.vue';
+import BotigaPokemon from './botigaPokemon.vue';
 
 export default {
   components: {
     ListPokemon,
     FavoritosPokemons,
-    EquipPokemon
+    EquipPokemon,
+    InventrariPokemon,
+    BotigaPokemon
   },
   data() {
     return {
       pokemonList: [],
       favorites: [],
       team: [],
-      currentView: 'list'
+      inventory: [], // Agrega inventari como un arreglo vacío
+      currentView: 'list',
+      
     };
   },
   methods: {
@@ -81,6 +97,9 @@ export default {
     },
     isOnTeam(pokemon) {
       return this.team.some(member => member.id === pokemon.id);
+    },
+    addItemToInventory(item) {
+      this.inventory.push(item);
     }
   },
   mounted() {
