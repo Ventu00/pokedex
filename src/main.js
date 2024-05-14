@@ -31,3 +31,12 @@ createApp(InventrariPokemon).mount('#InventrariPokemon');
 import BotigaPokemon from './components/botigaPokemon.vue';
 
 createApp(BotigaPokemon).mount('#BotigaPokemon');
+
+import ExperimentoInventario from './components/experimentoInventario.vue';
+
+createApp(ExperimentoInventario).mount('#ExperimentoInventario');
+
+
+import ExperimentoTienda from './components/experimentoTienda.vue';
+
+createApp(ExperimentoTienda).mount('#ExperimentoTienda');

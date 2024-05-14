@@ -37,12 +37,13 @@
       </div>
     </div>
 
-    <!-- Missatges informatius si no hi ha Pokémon per mostrar -->
-    <div v-else>
-      <p v-if="showFavoritesOnly">No hi ha Pokémon preferits.</p>
-      <p v-else-if="showTeamOnly">No hi ha Pokémon en l'equip.</p>
-      <p v-else>No hi ha Pokémon per mostrar.</p>
-    </div>
+    <div v-if="(showFavoritesOnly && !filteredPokemonList.length && !favorites.length) || (showTeamOnly && !team.length)" class="alert alert-info" role="alert">
+  <p v-if="showFavoritesOnly">No hay Pokémon preferidos.</p>
+  <p v-else-if="showTeamOnly">No hay Pokémon en el equipo.</p>
+  <p v-else>No hay Pokémon que mostrar.</p>
+</div>
+
+
   </div>
 </template>
 

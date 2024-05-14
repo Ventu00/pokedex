@@ -3,14 +3,14 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
       <div class="container">
-        <a class="navbar-brand" href="">Pokédex</a>
+        <a class="navbar-brand" href="#">Pokédex</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="" @click="toggleView('list')">Home</a>
+              <a class="nav-link" href="#" @click="toggleView('list')">Home</a>
             </li>
           </ul>
           <ul class="navbar-nav">
@@ -26,26 +26,28 @@
             <li class="nav-item">
               <a href="#" class="nav-link" @click="toggleView('botiga')">Botiga</a>
             </li>
+            <!-- Utiliza el mismo método toggleView para mostrar ExperimentoInventario y ExperimentoTienda -->
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click="toggleView('ExpInventario')">Experimento Inventario</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click="toggleView('ExpTienda')">Experimento Tienda</a>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
     <!-- Fin Navbar -->
 
-    <ListPokemon 
-      v-if="currentView === 'list'" 
-      :pokemonList="pokemonList" 
-      :favorites="favorites" 
-      :team="team" 
-      :inventory="inventory"
-            @add-to-favorites="addToFavorites" 
-      @add-to-team="addToTeam"
-      @remove-from-team="removeFromTeam"
-    ></ListPokemon>
+    <!-- Muestra los componentes según el valor de currentView -->
+    <ListPokemon v-if="currentView === 'list'" :pokemonList="pokemonList" :favorites="favorites" :team="team" :inventory="inventory" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
     <FavoritosPokemons v-else-if="currentView === 'favorites'" :favorites="favorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
     <EquipPokemon v-else-if="currentView === 'equip'" :equip="team" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></EquipPokemon>
-    <InventrariPokemon v-else-if="currentView === 'inventory'" :inventory="inventory"></InventrariPokemon>
+    <InventrariPokemon v-else-if="currentView === 'inventari'" :inventory="inventory"></InventrariPokemon>
     <BotigaPokemon v-else-if="currentView === 'botiga'" :inventory="inventory" @buyItem="addItemToInventory"></BotigaPokemon>
+    <!-- Agrega las condiciones para mostrar ExperimentoInventario y ExperimentoTienda -->
+    <ExperimentoInventario v-else-if="currentView === 'ExpInventario'" :inventory="compras"></ExperimentoInventario>
+    <ExperimentoTienda v-else-if="currentView === 'ExpTienda'" :items="items" :comprasHechas="handleCompra"></ExperimentoTienda>
 
   </div>
 </template>
@@ -56,6 +58,8 @@ import FavoritosPokemons from './favoritosPokemons.vue';
 import EquipPokemon from './equipPokemon.vue';
 import InventrariPokemon from './inventrariPokemon.vue';
 import BotigaPokemon from './botigaPokemon.vue';
+import ExperimentoInventario from './experimentoInventario.vue';
+import ExperimentoTienda from './experimentoTienda.vue';
 
 export default {
   components: {
@@ -63,19 +67,39 @@ export default {
     FavoritosPokemons,
     EquipPokemon,
     InventrariPokemon,
-    BotigaPokemon
+    BotigaPokemon,
+    // Agrega los componentes ExperimentoInventario y ExperimentoTienda
+    ExperimentoInventario,
+    ExperimentoTienda
   },
   data() {
     return {
       pokemonList: [],
       favorites: [],
       team: [],
-      inventory: [], // Agrega inventari como un arreglo vacío
+      inventory: [],
       currentView: 'list',
-      
+      items: [
+  { name: 'Pokeball', quantity: 10, selectedQuantity: 0, image: require('@/assets/pokeball.png') },
+  { name: 'Potion', quantity: 7, selectedQuantity: 0, image: require('@/assets/potion.png') },
+  { name: 'Elixir', quantity: 4, selectedQuantity: 0, image: require('@/assets/elixir.png') },
+  { name: 'Masterball', quantity: 2, selectedQuantity: 0, image: require('@/assets/masterball.png') },
+  { name: 'Ultraball', quantity: 3, selectedQuantity: 0, image: require('@/assets/ultraball.png') }
+
+
+],
+
+      compras: []
     };
   },
   methods: {
+    
+    handleCompra(item) {
+      this.compras.push(item);
+    },
+    agregarCompra(item) {
+      this.compras.push(item);
+    },
     addToFavorites(pokemon) {
       if (!this.favorites.some(fav => fav.id === pokemon.id)) {
         this.favorites.push(pokemon);
