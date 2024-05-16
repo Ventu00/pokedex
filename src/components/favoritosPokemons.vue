@@ -12,6 +12,8 @@
                 <b>Types:</b>
                 <span v-for="(type, index) in pokemon.types" :key="index" class="badge badge-primary text-dark">{{ type }}</span>
               </p>
+              <button @click="toggleFavorite(pokemon)" class="btn btn-outline-secondary">{{ isOnFav(pokemon) ? 'Remove from favorites' : 'Add to favorites' }}</button>
+
             </div>
           </div>
         </div>
@@ -27,9 +29,25 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  methods: {
+    isOnFav(pokemon) {
+      return this.favorites.some(fav => fav.id ===  pokemon.id);
+    },
+    toggleFavorite(pokemon) {
+      if (this.isOnFav(pokemon)) {
+        this.$emit('remove-from-favorites', pokemon);
+      } else {
+        this.$emit('add-to-favorites', pokemon);
+      }
+    },
+    removeFromFavorites(pokemon) {
+      this.$emit('remove-from-favorites', pokemon); // Emitir evento para eliminar el Pokémon de la lista de favoritos
+    }
   }
 };
 </script>
+
 
 <style scoped>
 /* Estilos existentes */

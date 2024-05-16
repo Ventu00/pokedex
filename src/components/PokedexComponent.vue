@@ -38,14 +38,15 @@
       </div>
     </nav>
     <!-- Fin Navbar -->
-
+<div class="lista"></div>
     <!-- Muestra los componentes según el valor de currentView -->
-    <ListPokemon v-if="currentView === 'list'" :pokemonList="pokemonList" :favorites="favorites" :team="team" :inventory="inventory" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
-    <FavoritosPokemons v-else-if="currentView === 'favorites'" :favorites="favorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
-    <EquipPokemon v-else-if="currentView === 'equip'" :equip="team" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></EquipPokemon>
-    <InventrariPokemon v-else-if="currentView === 'inventari'" :inventory="inventory"></InventrariPokemon>
-    <BotigaPokemon v-else-if="currentView === 'botiga'" :inventory="inventory" @buyItem="addItemToInventory"></BotigaPokemon>
-    <!-- Agrega las condiciones para mostrar ExperimentoInventario y ExperimentoTienda -->
+
+                                                <!-- para que se me espere al cargar -->
+    <ListPokemon v-if="currentView === 'list' && pokemonList " :pokemonList="pokemonList" :favorites="favorites" :team="team" :inventory="inventory" @remove-from-favorites="removeFromFavorites" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
+    <FavoritosPokemons v-if="currentView === 'favorites'" :favorites="favorites" @add-to-favorites="addToFavorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
+    <EquipPokemon v-if="currentView === 'equip' && team" :equip="team" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></EquipPokemon>
+
+
     <ExperimentoInventario v-else-if="currentView === 'ExpInventario'" :inventory="compras" ></ExperimentoInventario>
     <ExperimentoTienda v-else-if="currentView === 'ExpTienda'" :items="items" :comprasHechas="handleCompra"></ExperimentoTienda>
 
@@ -56,8 +57,7 @@
 import ListPokemon from './ListPokemon.vue';
 import FavoritosPokemons from './favoritosPokemons.vue';
 import EquipPokemon from './equipPokemon.vue';
-import InventrariPokemon from './inventrariPokemon.vue';
-import BotigaPokemon from './botigaPokemon.vue';
+
 import ExperimentoInventario from './experimentoInventario.vue';
 import ExperimentoTienda from './experimentoTienda.vue';
 
@@ -66,15 +66,12 @@ export default {
     ListPokemon,
     FavoritosPokemons,
     EquipPokemon,
-    InventrariPokemon,
-    BotigaPokemon,
-    // Agrega los componentes ExperimentoInventario y ExperimentoTienda
     ExperimentoInventario,
     ExperimentoTienda
   },
   data() {
   return {
-    pokemonList: [],
+    pokemonList: null, // null por que se me carga el html sin los datos de forma asincrona
     favorites: [],
     team: [],
     inventory: [
@@ -117,8 +114,13 @@ export default {
     }
     this.compras.push(item);
   },
-    removeFromFavorites(pokemon) {
-      this.favorites = this.favorites.filter(fav => fav.id !== pokemon.id);
+  removeFromFavorites(pokemon) {
+      // Encuentra el índice del Pokémon en la lista de favoritos
+      const index = this.favorites.findIndex(fav => fav.id === pokemon.id);
+      if (index !== -1) {
+        // Elimina el Pokémon de la lista de favoritos
+        this.favorites.splice(index, 1);
+      }
     },
     toggleView(view) {
       this.currentView = view;
@@ -128,11 +130,23 @@ export default {
         this.team.push(pokemon);
       }
     },
+    addToFavorites(pokemon) {
+        this.favorites.push(pokemon);
+      
+    },
+
     removeFromTeam(pokemon) {
       this.team = this.team.filter(member => member.id !== pokemon.id);
     },
     isOnTeam(pokemon) {
       return this.team.some(member => member.id === pokemon.id);
+    },
+    isOnFav(pokemon) {
+      return this.fav.some(fav => fav.id === pokemon.id);
+    },
+    addToFav(pokemon) {
+        this.favorites.push(pokemon);
+      
     },
     addItemToInventory(item) {
       this.inventory.push(item);
