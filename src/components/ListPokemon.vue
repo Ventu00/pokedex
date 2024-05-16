@@ -11,13 +11,19 @@
 
     <!-- Botons de filtratge -->
     <div class="btn-group mb-4">
-      <button type="button" class="btn btn-primary" @click="showFavoritesOnly = true; showTeamOnly = false">Mostrar Preferits</button>
-      <button type="button" class="btn btn-primary" @click="showFavoritesOnly = false; showTeamOnly = true">Mostrar Equip</button>
-      <button type="button" class="btn btn-primary" @click="showFavoritesOnly = false; showTeamOnly = false">Mostrar Tots</button>
+<button type="button" class="btn btn-primary" @click="showOnlyFavorites">Mostrar Preferits</button>
+<button type="button" class="btn btn-primary" @click="showOnlyTeam">Mostrar Equip</button>
+<button type="button" class="btn btn-primary" @click="showAll">Mostrar Tots</button>
+
     </div>
 
+    <div v-if="(showFavoritesOnly  && !favorites.length) || (showTeamOnly && !team.length)" class="alert alert-info" role="alert">
+  <p v-if="showFavoritesOnly">No hay Pokémon preferidos.</p>
+  <p v-else-if="showTeamOnly">No hay Pokémon en el equipo.</p>
+  <p v-else>No hay Pokémon que mostrar.</p>
+</div>
     <!-- Llista de Pokémon -->
-    <div v-if="filteredPokemonList.length > 0" class="container">
+    <div v-if="filteredPokemonList.length " class="container">
       <div class="row">
         <div v-for="pokemon in filteredPokemonList" :key="pokemon.id" class="col-lg-3 col-md-4 col-sm-6 mb-4">
           <!-- Card del Pokémon -->
@@ -37,11 +43,7 @@
       </div>
     </div>
 
-    <div v-if="(showFavoritesOnly && !filteredPokemonList.length && !favorites.length) || (showTeamOnly && !team.length)" class="alert alert-info" role="alert">
-  <p v-if="showFavoritesOnly">No hay Pokémon preferidos.</p>
-  <p v-else-if="showTeamOnly">No hay Pokémon en el equipo.</p>
-  <p v-else>No hay Pokémon que mostrar.</p>
-</div>
+
 
 
   </div>
@@ -61,7 +63,7 @@ export default {
       showTeamOnly: false,
       selectedType: '',
       pokemonTypes: [],
-      selectedRange: [1, 151]
+      selectedRange: [1, 8]
     };
   },
   computed: {
@@ -78,10 +80,14 @@ export default {
 
       // Aplicar otros filtros según la configuración
       if (this.showFavoritesOnly) {
-        filteredList = filteredList.filter(pokemon => this.isFavorite(pokemon));
-      } else if (this.showTeamOnly && this.team.length === 6 && this.team.every(member => member !== null)) {
-        filteredList = filteredList.filter(pokemon => this.isOnTeam(pokemon));
-      }
+  filteredList = filteredList.filter(pokemon => this.isFavorite(pokemon));
+}
+
+if (this.showTeamOnly && this.team.length === 6 && this.team.every(member => member !== null)) {
+  filteredList = filteredList.filter(pokemon => this.isOnTeam(pokemon));
+}
+
+
 
       return filteredList;
     }
@@ -91,31 +97,44 @@ export default {
     this.pokemonTypes = [...new Set(this.pokemonList.flatMap(pokemon => pokemon.types))];
   },
   methods: {
-    isFavorite(pokemon) {
-      return this.favorites.some(favorite => favorite.id === pokemon.id);
-    },
-    toggleFavorite(pokemon) {
-      if (this.isFavorite(pokemon)) {
-        this.$emit('remove-from-favorites', pokemon);
-      } else {
-        this.$emit('add-to-favorites', pokemon);
-      }
-    },
-    isOnTeam(pokemon) {
-      return this.team.some(teamMember => teamMember.id === pokemon.id);
-    },
-    toggleTeam(pokemon) {
-      if (this.isOnTeam(pokemon)) {
-        this.$emit('remove-from-team', pokemon);
-      } else {
-        this.$emit('add-to-team', pokemon);
-      }
-    },
-    // Método para manejar el evento de selección de Pokémon en el slider
-    filterPokemon(selectedRange) {
-      this.selectedRange = selectedRange;
+  isFavorite(pokemon) {
+    return this.favorites.some(favorite => favorite.id === pokemon.id);
+  },
+  toggleFavorite(pokemon) {
+    if (this.isFavorite(pokemon)) {
+      this.$emit('remove-from-favorites', pokemon);
+    } else {
+      this.$emit('add-to-favorites', pokemon);
     }
+  },
+  isOnTeam(pokemon) {
+    return this.team.some(teamMember => teamMember.id === pokemon.id);
+  },
+  toggleTeam(pokemon) {
+    if (this.isOnTeam(pokemon)) {
+      this.$emit('remove-from-team', pokemon);
+    } else {
+      this.$emit('add-to-team', pokemon);
+    }
+  },
+  // Método para manejar el evento de selección de Pokémon en el slider
+  filterPokemon(selectedRange) {
+    this.selectedRange = selectedRange;
+  },
+  // Nuevos métodos para manejar el filtrado de Pokémon
+  showOnlyFavorites() {
+    this.showFavoritesOnly = true;
+    this.showTeamOnly = false;
+  },
+  showOnlyTeam() {
+    this.showFavoritesOnly = false;
+    this.showTeamOnly = true;
+  },
+  showAll() {
+    this.showFavoritesOnly = false;
+    this.showTeamOnly = false;
   }
+}
 };
 </script>
 

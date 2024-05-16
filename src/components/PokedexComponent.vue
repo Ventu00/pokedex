@@ -46,7 +46,7 @@
     <InventrariPokemon v-else-if="currentView === 'inventari'" :inventory="inventory"></InventrariPokemon>
     <BotigaPokemon v-else-if="currentView === 'botiga'" :inventory="inventory" @buyItem="addItemToInventory"></BotigaPokemon>
     <!-- Agrega las condiciones para mostrar ExperimentoInventario y ExperimentoTienda -->
-    <ExperimentoInventario v-else-if="currentView === 'ExpInventario'" :inventory="compras"></ExperimentoInventario>
+    <ExperimentoInventario v-else-if="currentView === 'ExpInventario'" :inventory="compras" ></ExperimentoInventario>
     <ExperimentoTienda v-else-if="currentView === 'ExpTienda'" :items="items" :comprasHechas="handleCompra"></ExperimentoTienda>
 
   </div>
@@ -73,38 +73,50 @@ export default {
     ExperimentoTienda
   },
   data() {
-    return {
-      pokemonList: [],
-      favorites: [],
-      team: [],
-      inventory: [],
-      currentView: 'list',
-      items: [
-  { name: 'Pokeball', quantity: 10, selectedQuantity: 0, image: require('@/assets/pokeball.png') },
-  { name: 'Potion', quantity: 7, selectedQuantity: 0, image: require('@/assets/potion.png') },
-  { name: 'Elixir', quantity: 4, selectedQuantity: 0, image: require('@/assets/elixir.png') },
-  { name: 'Masterball', quantity: 2, selectedQuantity: 0, image: require('@/assets/masterball.png') },
-  { name: 'Ultraball', quantity: 3, selectedQuantity: 0, image: require('@/assets/ultraball.png') }
+  return {
+    pokemonList: [],
+    favorites: [],
+    team: [],
+    inventory: [
 
+    ],
+    currentView: 'list',
+    items: [
+      { name: 'Pokeball', quantity: 15, selectedQuantity: 0, image: require('@/assets/pokeball.png') },
+      { name: 'Potion', quantity: 5, selectedQuantity: 0, image: require('@/assets/potion.png') },
+      { name: 'Elixir', quantity: 5, selectedQuantity: 0, image: require('@/assets/elixir.png') },
+      { name: 'Masterball', quantity: 15, selectedQuantity: 0, image: require('@/assets/masterball.png') },
+      { name: 'Ultraball', quantity: 15, selectedQuantity: 0, image: require('@/assets/ultraball.png') }
+    ],
 
-],
+    compras: [
+    { name: 'Pokeball', quantity: 1, selectedQuantity: 0, image: require('@/assets/pokeball.png') },
+      { name: 'Potion', quantity: 1, selectedQuantity: 0, image: require('@/assets/potion.png') },
+      { name: 'Elixir', quantity: 1, selectedQuantity: 0, image: require('@/assets/elixir.png') },
+      { name: 'Masterball', quantity: 1, selectedQuantity: 0, image: require('@/assets/masterball.png') },
+      { name: 'Ultraball', quantity: 1, selectedQuantity: 0, image: require('@/assets/ultraball.png') }
+    ]
+  };
+},
 
-      compras: []
-    };
-  },
   methods: {
     
-    handleCompra(item) {
-      this.compras.push(item);
-    },
-    agregarCompra(item) {
-      this.compras.push(item);
-    },
-    addToFavorites(pokemon) {
-      if (!this.favorites.some(fav => fav.id === pokemon.id)) {
-        this.favorites.push(pokemon);
-      }
-    },
+  handleCompra(item) {
+    // Eliminar duplicados del array compras basados en el nombre del item
+    const existingIndex = this.compras.findIndex(i => i.name === item.name);
+    if (existingIndex !== -1) {
+      this.compras.splice(existingIndex, 1);
+    }
+    this.compras.push(item);
+  },
+  agregarCompra(item) {
+    // Eliminar duplicados del array compras basados en el nombre del item
+    const existingIndex = this.compras.findIndex(i => i.name === item.name);
+    if (existingIndex !== -1) {
+      this.compras.splice(existingIndex, 1);
+    }
+    this.compras.push(item);
+  },
     removeFromFavorites(pokemon) {
       this.favorites = this.favorites.filter(fav => fav.id !== pokemon.id);
     },
@@ -127,6 +139,10 @@ export default {
     }
   },
   mounted() {
+    // this.initialItems = [{ name: 'Pokeball', quantity: 1, selectedQuantity: 0, image: require('@/assets/pokeball.png')}, 
+    //                     { name: 'Potion', quantity: 1, selectedQuantity: 0, image: require('@/assets/potion.png') },
+    //                     { name: 'Elixir', quantity: 1, selectedQuantity: 0, image: require('@/assets/elixir.png') },
+                        // ];
     fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
       .then(response => response.json())
       .then(data => {
