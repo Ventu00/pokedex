@@ -1,25 +1,32 @@
 <template>
   <div>
     <!-- Componente del Slider -->
-    <PokemonSlider @pokemon-selected="filterPokemon"></PokemonSlider>
+    <div class="centered-content">
+      <div class="btn-group mb-4">
+        <button type="button" class="btn btn-danger" @click="showOnlyFavorites">Mostrar Preferidos</button>
+        <button type="button" class="btn btn-success" @click="showOnlyTeam">Mostrar Equipo</button>
+        <button type="button" class="btn btn-primary" @click="showAll">Mostrar Todos</button>
+      </div>
+      <PokemonSlider @pokemon-selected="filterPokemon"></PokemonSlider>
 
-    <!-- Botones de filtrado -->
-    <div class="btn-group mb-4">
-      <button type="button" class="btn btn-primary" @click="showOnlyFavorites">Mostrar Preferidos</button>
-      <button type="button" class="btn btn-primary" @click="showOnlyTeam">Mostrar Equip</button>
-      <button type="button" class="btn btn-primary" @click="showAll">Mostrar Tots</button>
-    </div>
 
-    <div v-if="(showFavoritesOnly && !favorites.length) || (showTeamOnly && !team.length)" class="alert alert-info" role="alert">
+      <div class="select-container">
+        <p>Tipos:  </p>
+        <select v-if="pokemonList && pokemonTypes" v-model="selectedType" class="form-control mb-4 select-limited-width">
+          <option value="">Tots els tipus</option>
+          <option v-for="type in pokemonTypes" :value="type" :key="type">{{ type }}</option>
+        </select>
+      </div>
+
+  </div>
+
+    <div v-if="(showFavoritesOnly && !favorites.length) || (showTeamOnly && team.length < 6)" class="alert alert-info" role="alert">
       <p v-if="showFavoritesOnly">No hay Pokémon preferidos.</p>
-      <p v-else-if="showTeamOnly">No hay Pokémon en el equipo.</p>
+      <p v-else-if="showTeamOnly">No hay Pokémon en el equipo. Añade 6 Pokémon de la lista:</p>
       <p v-else>No hay Pokémon que mostrar.</p>
     </div>
 
-    <select v-if="pokemonList && pokemonTypes" v-model="selectedType" class="form-control mb-4">
-      <option value="">Tots els tipus</option>
-      <option v-for="type in pokemonTypes" :value="type" :key="type">{{ type }}</option>
-    </select>
+ 
 
     <!-- Lista de Pokémon -->
     <div v-if="filteredPokemonList.length" class="container">
@@ -136,5 +143,20 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos aquí */
+
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-group {
+  margin-top: 20px;
+}
+
+
+.select-container {
+  width: 220px; 
+  display: flex;
+}
 </style>

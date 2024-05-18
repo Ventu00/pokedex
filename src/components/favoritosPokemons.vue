@@ -42,7 +42,7 @@ export default {
       }
     },
     removeFromFavorites(pokemon) {
-      this.$emit('remove-from-favorites', pokemon); // Emitir evento para eliminar el Pokémon de la lista de favoritos
+      this.$emit('remove-from-favorites', pokemon); 
     }
   }
 };
@@ -50,5 +50,4 @@ export default {
 
 
 <style scoped>
-/* Estilos existentes */
 </style>

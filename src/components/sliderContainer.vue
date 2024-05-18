@@ -26,6 +26,27 @@
   <style scoped>
   .slider-container {
     margin-top: 20px;
+    text-align: center;
   }
+
+
+
+  input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 25px; 
+  height: 25px; 
+  background: url('@/assets/pokeball.png') no-repeat center center; 
+  background-size: contain; 
+  cursor: pointer; 
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 40px; 
+  height: 40px; 
+  background: url('@/assets/pokeball.png') no-repeat center center; 
+  background-size: contain; 
+  cursor: pointer; 
+}
   </style>
   

@@ -23,6 +23,7 @@ export default {
     comprasHechas: Function
   },
   methods: {
+
     buyItem(index) {
       const item = this.items[index];
       if (item.selectedQuantity > 0) {
@@ -42,6 +43,8 @@ export default {
         alert(`No puedes seleccionar más unidades de ${item.name}.`);
       }
     },
+
+
     decrementQuantity(index) {
       const item = this.items[index];
       if (item.selectedQuantity > 0) {
@@ -52,6 +55,7 @@ export default {
       return require(`@/assets/${name.toLowerCase()}.png`);
     }
   }
+
 };
 </script>
 
@@ -61,7 +65,7 @@ export default {
 }
 
 .pokemon-item {
-  border: 1px solid #dc3545; /* Cambiar el color del borde a rojo */
+  border: 1px solid #dc3545; 
   padding: 10px;
   margin: 10px;
   display: inline-block;

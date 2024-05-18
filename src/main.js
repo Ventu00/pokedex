@@ -23,11 +23,11 @@ import SliderContainer from './components/sliderContainer.vue';
 createApp(SliderContainer).mount('#SliderContainer');
 
 
-import ExperimentoInventario from './components/experimentoInventario.vue';
+import PokeInventario from './components/pokeInventario.vue';
 
-createApp(ExperimentoInventario).mount('#ExperimentoInventario');
+createApp(PokeInventario).mount('#PokeInventario');
 
 
-import ExperimentoTienda from './components/experimentoTienda.vue';
+import PokeTienda from './components/pokeTienda.vue';
 
-createApp(ExperimentoTienda).mount('#ExperimentoTienda');
+createApp(PokeTienda).mount('#PokeTienda');
