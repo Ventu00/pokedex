@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     getImagePath(name) {
-      // Suponiendo que las imágenes están en una carpeta llamada 'assets'
       return require(`@/assets/${name.toLowerCase()}.png`);
     }
   }
