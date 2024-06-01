@@ -112,8 +112,7 @@ export default {
     this.pokemonList.forEach(pokemon => {
       const types = pokemon.types;
 
-      // Agregar los tipos a la lista general
-      allTypes.push(...types);
+      allTypes.push(...types);//... con el propagador descomongo en elmentos individuales dentro del array sino incluso me aparecen pares
     });
 
     return allTypes;
