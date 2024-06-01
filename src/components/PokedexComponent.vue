@@ -32,11 +32,14 @@
 <div class="lista"></div>
                                                 <!-- para que se me espere al cargar -->
     <ListPokemon v-if="currentView === 'list' && pokemonList " :pokemonList="pokemonList" :favorites="favorites" :team="team" :inventory="inventory" @remove-from-favorites="removeFromFavorites" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
+    
+      <!-- se muestra si el toggle dice que el view es favorites , hago blindin de datos para pasar favorites al hijo, se ejecutaran las  funciones cuando el hijo emita el evento "@" -->
     <FavoritosPokemons v-if="currentView === 'favorites'" :favorites="favorites" @add-to-favorites="addToFavorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
+    
     <EquipPokemon v-if="currentView === 'equip' && team" :equip="team" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></EquipPokemon>
 
-
     <PokeInventario v-else-if="currentView === 'PokeInventario'" :inventory="compras" ></PokeInventario>
+    
     <PokeTienda v-else-if="currentView === 'PokeTienda'" :items="items" :comprasHechas="handleCompra"></PokeTienda>
 
   </div>
@@ -91,14 +94,16 @@ export default {
       this.currentView = view;
    },
   
-  handleCompra(item) {
-    // Eliminar duplicados del array compras segun el nombre del item al comprar
-    const existingIndex = this.compras.findIndex(i => i.name === item.name);
-    if (existingIndex !== -1) {
-      this.compras.splice(existingIndex, 1);//adios
-    }
+   handleCompra(item) {
+  const existingIndex = this.compras.findIndex(i => i.name === item.name);
+  if (existingIndex !== -1) {
+    // Si el artículo ya existe en las compras, suma la cantidad seleccionada a la cantidad existente (lo que pasamos antes)
+    this.compras[existingIndex].quantity += item.quantity;
+  } else {
     this.compras.push(item);
-  },
+  }
+}
+,
   addItemToInventory(item) {
       this.inventory.push(item);
   },
@@ -107,36 +112,25 @@ export default {
 
 //                                            equipo
     addToTeam(pokemon) {
-      if (this.team.length < 6 && !this.isOnTeam(pokemon)) {
+      if (this.team.length < 6) {
         this.team.push(pokemon);
       }
     },
     removeFromTeam(pokemon) {
       this.team = this.team.filter(member => member.id !== pokemon.id);
     },
-    isOnTeam(pokemon) {
-      return this.team.some(member => member.id === pokemon.id);
-    },
 
 
 
     //                                    favoritos
-    addToFavorites(pokemon) {
-        this.favorites.push(pokemon);
-    },
-    removeFromFavorites(pokemon) {
-      const index = this.favorites.findIndex(fav => fav.id === pokemon.id);
-      if (index !== -1) {
-        // Elimina el Pokémon de la lista de favoritos
-        this.favorites.splice(index, 1);
-      }
-    },
-    isOnFav(pokemon) {
-      return this.fav.some(fav => fav.id === pokemon.id);
-    },
-    addToFav(pokemon) {
-        this.favorites.push(pokemon);
-    }
+   addToFavorites(pokemon) {
+      this.favorites.push(pokemon);
+    
+  },
+  removeFromFavorites(pokemon) {
+    this.favorites = this.favorites.filter(fav => fav.id !== pokemon.id);
+  },
+
   },
 
 

@@ -27,14 +27,16 @@ export default {
     buyItem(index) {
       const item = this.items[index];
       if (item.selectedQuantity > 0) {
+        //vamo a hacer un destructuring
+        this.comprasHechas({ ...item, quantity: item.selectedQuantity }); // Pasamos solo la cantidad seleccionada como quantity, ah y el item
         item.quantity -= item.selectedQuantity;
-        this.comprasHechas({ ...item, quantity: item.selectedQuantity });
         item.selectedQuantity = 0; // Reset selectedQuantity after purchase
         alert(`¡Has comprado ${item.name}!`);
       } else {
         alert(`Selecciona una cantidad válida para ${item.name} antes de comprar.`);
       }
-    },
+    }
+,
     incrementQuantity(index) {
       const item = this.items[index];
       if (item.selectedQuantity < item.quantity) {

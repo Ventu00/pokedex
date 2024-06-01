@@ -84,7 +84,7 @@ export default {
       // Filtrar por rango
       filteredList = filteredList.filter(pokemon => pokemon.id >= this.selectedRange[0] && pokemon.id <= this.selectedRange[1]);
 
-      // Aplicar otros filtros según la configuración
+     
       if (this.showFavoritesOnly) {
         filteredList = filteredList.filter(pokemon => this.isOnFav(pokemon));
       }
@@ -97,10 +97,38 @@ export default {
     }
   },
   mounted() {
-    // Crear la lista de tipos de Pokémon a partir de la lista de Pokémon disponibles
-    this.pokemonTypes = [...new Set(this.pokemonList.flatMap(pokemon => pokemon.types))];
+
+  const allTypes = this.getAllPokemonTypes();
+
+  const uniqueTypes = this.removeDuplicates(allTypes);
+
+  // lista de tipos únicos a pokemonTypes
+  this.pokemonTypes = uniqueTypes;
   },
   methods: {
+    getAllPokemonTypes() {
+    const allTypes = [];
+
+    this.pokemonList.forEach(pokemon => {
+      const types = pokemon.types;
+
+      // Agregar los tipos a la lista general
+      allTypes.push(...types);
+    });
+
+    return allTypes;
+  },
+
+  removeDuplicates(array) {
+    // creo un conjunto con set ya que con esa estructura los datos del array no se duplican
+    const uniqueSet = new Set(array);
+
+    // hay que pasar ahora el conjunto de nuevo a un array y sacaremos todos los tipos finalmente
+    const uniqueArray = Array.from(uniqueSet);
+
+    return uniqueArray;
+  },
+
     isOnFav(pokemon) {
       return this.favorites.some(fav => fav.id === pokemon.id);
     },
@@ -125,7 +153,6 @@ export default {
     filterPokemon(selectedRange) {
       this.selectedRange = selectedRange;
     },
-    // Nuevos métodos para manejar el filtrado de Pokémon
     showOnlyFavorites() {
       this.showFavoritesOnly = true;
       this.showTeamOnly = false;
