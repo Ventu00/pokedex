@@ -41,9 +41,7 @@ export default {
         this.$emit('add-to-favorites', pokemon);
       }
     },
-    removeFromFavorites(pokemon) {
-      this.$emit('remove-from-favorites', pokemon); 
-    }
+
   }
 };
 </script>

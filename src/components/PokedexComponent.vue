@@ -31,7 +31,7 @@
     </nav>
 <div class="lista"></div>
                                                 <!-- para que se me espere al cargar -->
-    <ListPokemon v-if="currentView === 'list' && pokemonList " :pokemonList="pokemonList" :favorites="favorites" :team="team" :inventory="inventory" @remove-from-favorites="removeFromFavorites" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
+    <ListPokemon v-if="currentView === 'list' && pokemonList " :pokemonList="pokemonList" :favorites="favorites" :team="team"  @remove-from-favorites="removeFromFavorites" @add-to-favorites="addToFavorites" @add-to-team="addToTeam" @remove-from-team="removeFromTeam"></ListPokemon>
     
       <!-- se muestra si el toggle dice que el view es favorites , hago blindin de datos para pasar favorites al hijo, se ejecutaran las  funciones cuando el hijo emita el evento "@" -->
     <FavoritosPokemons v-if="currentView === 'favorites'" :favorites="favorites" @add-to-favorites="addToFavorites" @remove-from-favorites="removeFromFavorites"></FavoritosPokemons>
@@ -66,9 +66,7 @@ export default {
     pokemonList: null, // null por que se me carga el html sin los datos de forma asincrona
     favorites: [],
     team: [],
-    inventory: [
-
-    ],
+ 
     currentView: 'list',
     items: [
       { name: 'Pokeball', quantity: 15, selectedQuantity: 0, image: require('@/assets/pokeball.png') },
@@ -102,11 +100,7 @@ export default {
   } else {
     this.compras.push(item);
   }
-}
-,
-  addItemToInventory(item) {
-      this.inventory.push(item);
-  },
+},
 
 
 

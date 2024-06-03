@@ -27,7 +27,7 @@ export default {
     buyItem(index) {
       const item = this.items[index];
       if (item.selectedQuantity > 0) {
-        //vamo a hacer un destructuring
+        //vamos a hacer un destructuring (shallow copy para nuevo item copiando todas las propiedades)
         this.comprasHechas({ ...item, quantity: item.selectedQuantity }); // Pasamos solo la cantidad seleccionada como quantity, ah y el item
         item.quantity -= item.selectedQuantity;
         item.selectedQuantity = 0; // Reset selectedQuantity after purchase

@@ -69,7 +69,7 @@ export default {
       showTeamOnly: false,
       selectedType: '',
       pokemonTypes: [],
-      selectedRange: [1, 8]
+      selectedRange: [1, 151]
     };
   },
   computed: {

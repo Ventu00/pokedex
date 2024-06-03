@@ -19,9 +19,6 @@ export default {
   props: {
     inventory: {
       type: Array,
-      default: () => [
-        
-      ]
     }
   },
   methods: {
