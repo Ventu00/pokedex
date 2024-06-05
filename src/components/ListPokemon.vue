@@ -7,7 +7,7 @@
         <button type="button" class="btn btn-success" @click="showOnlyTeam">Mostrar Equipo</button>
         <button type="button" class="btn btn-primary" @click="showAll">Mostrar Todos</button>
       </div>
-      <PokemonSlider @pokemon-selected="filterPokemon"></PokemonSlider>
+      <!-- <PokemonSlider @pokemon-selected="filterPokemon"></PokemonSlider> -->
 
 
       <div class="select-container">
@@ -52,12 +52,12 @@
 </template>
 
 <script>
-import PokemonSlider from './sliderContainer.vue';
-
+/* import PokemonSlider from './sliderContainer.vue';
+ */
 export default {
   components: {
-    PokemonSlider
-  },
+/*     PokemonSlider
+ */  },
   props: {
     pokemonList: Object,
     favorites: Array, 
